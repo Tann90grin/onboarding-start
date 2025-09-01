@@ -46,7 +46,7 @@ always @(posedge clk or negedge rst_n) begin
             spi_buf <= 16'b0;
             bit_cnt <= 5'b0;
             trans_comp <= 1'b0;
-        end else if(ncs_sync[1] == 1'b0 && bit_cnt < 5'd16) begin
+        end else if(ncs_sync[0] == 1'b0 && bit_cnt < 5'd16) begin
             if(sclk_posedge) begin
                 spi_buf <= {spi_buf[14:0], copi_sync[1]};
                 bit_cnt <= bit_cnt + 1;
