@@ -20,9 +20,9 @@ reg [15:0]  spi_buf;
 
 wire        sclk_posedge, ncs_negedge, ncs_posedge;
 
-assign sclk_posedge = ~sclk_sync[1] & sclk_sync[2];
-assign ncs_negedge = ncs_sync[0] & ~ncs_sync[1];
-assign ncs_posedge = ~ncs_sync[0] & ncs_sync[1];
+assign sclk_posedge = sclk_sync[1] == 1'b0 & sclk_sync[0] == 1'b1;
+assign ncs_negedge = ncs_sync[1] == 1'b1 & ncs_sync[0] == 1'b0;
+assign ncs_posedge = ncs_sync[1] == 1'b0 & ncs_sync[0] == 1'b1;
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
@@ -66,7 +66,7 @@ always @(posedge clk or negedge rst_n) begin
             en_reg_pwm_7_0 <= 8'b0;
             en_reg_pwm_15_8 <= 8'b0;
             pwm_duty_cycle <= 8'b0;
-    end else if (spi_buf[15] && trans_comp) begin
+    end else if (spi_buf[15] == 1'b1 && trans_comp) begin
         if (spi_buf[14:8] <= MAX_VALID_ADDR)begin
             case(spi_buf[14:8])
             7'h00: en_reg_out_7_0 <= spi_buf[7:0];
