@@ -21,8 +21,8 @@ reg [15:0]  spi_buf;
 wire        sclk_posedge, ncs_negedge, ncs_posedge;
 
 assign sclk_posedge = ~sclk_sync[0] & sclk_sync[1];
-assign ncs_negedge = ncs_prev_sync[0] & ~ncs_sync[1];
-assign ncs_posedge = ~ncs_prev_sync[0] & ncs_sync[1];
+assign ncs_negedge = ncs_sync[0] & ~ncs_sync[1];
+assign ncs_posedge = ~ncs_sync[0] & ncs_sync[1];
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
