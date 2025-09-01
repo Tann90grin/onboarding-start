@@ -52,7 +52,7 @@ always @(posedge clk or negedge rst_n) begin
                 bit_cnt <= bit_cnt + 1;
             end
         end else begin
-            if(ncs_posedge && bit_cnt == 16) begin
+            if(ncs_posedge && bit_cnt == 5'd16) begin
                 trans_comp <= 1'b1;
             end
         end
