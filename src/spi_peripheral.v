@@ -42,6 +42,10 @@ always @(posedge clk or negedge rst_n) begin
         bit_cnt <= 5'b0;
         trans_comp <= 1'b0;
     end else begin
+        spi_buf <= spi_buf;
+        bit_cnt <= bit_cnt;
+        trans_comp <= trans_comp;
+        
         if(ncs_negedge) begin
             spi_buf <= 16'b0;
             bit_cnt <= 5'b0;
