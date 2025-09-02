@@ -191,11 +191,16 @@ async def test_pwm_freq(dut):
     await ClockCycles(dut.clk, 5)
 
     await send_spi_transaction(dut, 1, 0x00, 0xFF)
+    await ClockCycles(dut.clk, 100)
     await send_spi_transaction(dut, 1, 0x01, 0xFF)
+    await ClockCycles(dut.clk, 100)
     await send_spi_transaction(dut, 1, 0x02, 0xFF)
+    await ClockCycles(dut.clk, 100)
     await send_spi_transaction(dut, 1, 0x03, 0xFF)
+    await ClockCycles(dut.clk, 100)
     #50% duty cycle for test
     await send_spi_transaction(dut, 1, 0x04, 0x80)
+    await ClockCycles(dut.clk, 100)
 
     dut._log.info(f"Frequency Test")
 
@@ -236,12 +241,17 @@ async def test_pwm_duty(dut):
     await ClockCycles(dut.clk, 5)
 
     await send_spi_transaction(dut, 1, 0x00, 0xFF)
+    await ClockCycles(dut.clk, 100)
     await send_spi_transaction(dut, 1, 0x01, 0xFF)
+    await ClockCycles(dut.clk, 100)
     await send_spi_transaction(dut, 1, 0x02, 0xFF)
+    await ClockCycles(dut.clk, 100)
     await send_spi_transaction(dut, 1, 0x03, 0xFF)
+    await ClockCycles(dut.clk, 100)
 
     # 0% Duty Cycle
     await send_spi_transaction(dut, 1, 0x04, 0x00)
+    await ClockCycles(dut.clk, 100)
     dut._log.info(f"Test Duty Cycle: 0%")
     posedge1_tim = await posedge_detect(dut)
     assert posedge1_tim < 0, f"Expected 0%"
@@ -249,6 +259,7 @@ async def test_pwm_duty(dut):
 
     # 50% Duty Cycle
     await send_spi_transaction(dut, 1, 0x04, 0x80)
+    await ClockCycles(dut.clk, 100)
     dut._log.info(f"Duty Cycle: 50%")
 
     #Synchronization
@@ -265,6 +276,7 @@ async def test_pwm_duty(dut):
 
     # 100% Duty Cycle
     await send_spi_transaction(dut, 1, 0x04, 0xFF)
+    await ClockCycles(dut.clk, 100)
     dut._log.info(f"Duty Cycle: 100%")
     posedge1_tim = await posedge_detect(dut)
     negedge_tim = await negedge_detect(dut)
