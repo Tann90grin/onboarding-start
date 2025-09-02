@@ -29,14 +29,6 @@ always @(posedge clk or negedge rst_n) begin
         sclk_sync <= 3'b0;
         copi_sync <= 2'b0;
         ncs_sync <= 2'b0;
-        en_reg_out_7_0 <= 8'b0;
-        en_reg_out_15_8 <= 8'b0;
-        en_reg_pwm_7_0 <= 8'b0;
-        en_reg_pwm_15_8 <= 8'b0;
-        pwm_duty_cycle <= 8'b0;
-        spi_buf <= 16'b0;
-        bit_cnt <= 5'b0;
-        trans_comp <= 1'b0;
     end else begin
         sclk_sync <= {sclk_sync[1:0], ui_in[0]};
         copi_sync <= {copi_sync[0], ui_in[1]};
@@ -46,14 +38,6 @@ end
 
 always @(posedge clk or negedge rst_n) begin
     if(~rst_n) begin
-        sclk_sync <= 3'b0;
-        copi_sync <= 2'b0;
-        ncs_sync <= 2'b0;
-        en_reg_out_7_0 <= 8'b0;
-        en_reg_out_15_8 <= 8'b0;
-        en_reg_pwm_7_0 <= 8'b0;
-        en_reg_pwm_15_8 <= 8'b0;
-        pwm_duty_cycle <= 8'b0;
         spi_buf <= 16'b0;
         bit_cnt <= 5'b0;
         trans_comp <= 1'b0;
@@ -67,8 +51,11 @@ always @(posedge clk or negedge rst_n) begin
                 spi_buf <= {spi_buf[14:0], copi_sync[1]};
                 bit_cnt <= bit_cnt + 1;
             end
+            trans_comp <= trans_comp;
         end else begin
             if(ncs_posedge && bit_cnt == 5'd16) begin
+                bit_cnt <= bit_cnt;
+                spi_buf <= spi_buf;
                 trans_comp <= 1'b1;
             end
         end
@@ -77,17 +64,11 @@ end
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-        sclk_sync <= 3'b0;
-        copi_sync <= 2'b0;
-        ncs_sync <= 2'b0;
         en_reg_out_7_0 <= 8'b0;
         en_reg_out_15_8 <= 8'b0;
         en_reg_pwm_7_0 <= 8'b0;
         en_reg_pwm_15_8 <= 8'b0;
         pwm_duty_cycle <= 8'b0;
-        spi_buf <= 16'b0;
-        bit_cnt <= 5'b0;
-        trans_comp <= 1'b0;
     end else begin
         if (spi_buf[15] == 1'b1 && trans_comp) begin
             if (spi_buf[14:8] <= MAX_VALID_ADDR)begin
