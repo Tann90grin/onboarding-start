@@ -58,8 +58,8 @@ always @(posedge clk or negedge rst_n) begin
             end
         end
 
-        if (spi_buf[15] == 1'b1 && trans_comp) begin
-            if (spi_buf[14:8] <= MAX_VALID_ADDR)begin
+        if (trans_comp) begin
+            if (spi_buf[15] == 1'b1 && spi_buf[14:8] <= MAX_VALID_ADDR)begin
                 case(spi_buf[14:8])
                 7'h00: en_reg_out_7_0 <= spi_buf[7:0];
                 7'h01: en_reg_out_15_8 <= spi_buf[7:0];
