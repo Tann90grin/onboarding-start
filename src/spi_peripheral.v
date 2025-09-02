@@ -66,18 +66,21 @@ always @(posedge clk or negedge rst_n) begin
             en_reg_pwm_7_0 <= 8'b0;
             en_reg_pwm_15_8 <= 8'b0;
             pwm_duty_cycle <= 8'b0;
-    end else if (spi_buf[15] == 1'b1 && trans_comp) begin
-        if (spi_buf[14:8] <= MAX_VALID_ADDR)begin
-            case(spi_buf[14:8])
-            7'h00: en_reg_out_7_0 <= spi_buf[7:0];
-            7'h01: en_reg_out_15_8 <= spi_buf[7:0];
-            7'h02: en_reg_pwm_7_0 <= spi_buf[7:0];
-            7'h03: en_reg_pwm_15_8 <= spi_buf[7:0];
-            7'h04: pwm_duty_cycle <= spi_buf[7:0];
-            default:;
-            endcase
+            trans_comp <= 1'b0;
+    end else begin
+        if (spi_buf[15] == 1'b1 && trans_comp) begin
+            if (spi_buf[14:8] <= MAX_VALID_ADDR)begin
+                case(spi_buf[14:8])
+                7'h00: en_reg_out_7_0 <= spi_buf[7:0];
+                7'h01: en_reg_out_15_8 <= spi_buf[7:0];
+                7'h02: en_reg_pwm_7_0 <= spi_buf[7:0];
+                7'h03: en_reg_pwm_15_8 <= spi_buf[7:0];
+                7'h04: pwm_duty_cycle <= spi_buf[7:0];
+                default:;
+                endcase
+            end
+            trans_comp <= 1'b0;
         end
-        trans_comp <= 1'b0;
     end
 end
 
