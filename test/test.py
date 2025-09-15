@@ -257,6 +257,23 @@ async def test_pwm_duty(dut):
     assert posedge1_tim < 0, f"Expected 0%"
     dut._log.info(f"Actual Duty cycle = 0.00 %")
 
+    # 25% Duty Cycle
+    await send_spi_transaction(dut, 1, 0x04, 0x40)
+    await ClockCycles(dut.clk, 100)
+    dut._log.info(f"Duty Cycle: 50%")
+
+    #Synchronization
+    await posedge_detect(dut)
+    await negedge_detect(dut)
+    await posedge_detect(dut)
+
+    posedge1_tim = await posedge_detect(dut)
+    negedge_tim = await negedge_detect(dut)
+    posedge2_tim = await posedge_detect(dut)
+    duty_cycle = (negedge_tim - posedge1_tim) * 100 / (posedge2_tim - posedge1_tim)
+    assert 24.90 < duty_cycle < 25.10, f"Expected 25%"
+    dut._log.info(f"Actual Duty cycle = {duty_cycle:.2f} %")
+
     # 50% Duty Cycle
     await send_spi_transaction(dut, 1, 0x04, 0x80)
     await ClockCycles(dut.clk, 100)
@@ -271,7 +288,24 @@ async def test_pwm_duty(dut):
     negedge_tim = await negedge_detect(dut)
     posedge2_tim = await posedge_detect(dut)
     duty_cycle = (negedge_tim - posedge1_tim) * 100 / (posedge2_tim - posedge1_tim)
-    assert 49.90 < duty_cycle < 50.10, f"Expected 0%"
+    assert 49.90 < duty_cycle < 50.10, f"Expected 50%"
+    dut._log.info(f"Actual Duty cycle = {duty_cycle:.2f} %")
+
+    # 75% Duty Cycle
+    await send_spi_transaction(dut, 1, 0x04, 0xC0)
+    await ClockCycles(dut.clk, 100)
+    dut._log.info(f"Duty Cycle: 75%")
+
+    #Synchronization
+    await posedge_detect(dut)
+    await negedge_detect(dut)
+    await posedge_detect(dut)
+
+    posedge1_tim = await posedge_detect(dut)
+    negedge_tim = await negedge_detect(dut)
+    posedge2_tim = await posedge_detect(dut)
+    duty_cycle = (negedge_tim - posedge1_tim) * 100 / (posedge2_tim - posedge1_tim)
+    assert 74.90 < duty_cycle < 75.10, f"Expected 750%"
     dut._log.info(f"Actual Duty cycle = {duty_cycle:.2f} %")
 
     # 100% Duty Cycle
@@ -282,5 +316,6 @@ async def test_pwm_duty(dut):
     negedge_tim = await negedge_detect(dut)
     assert negedge_tim < 0, f"Expected 100%"
     dut._log.info(f"Actual Duty cycle = 100.00 %")
+    
 
     dut._log.info("PWM Duty Cycle test completed successfully")
